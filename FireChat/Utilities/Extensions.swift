@@ -81,6 +81,16 @@ extension UIView {
     }
 }
 
+extension UIViewController {
+    func configureGradientLayer() {
+        let gradient = CAGradientLayer()
+        gradient.colors = [UIColor.systemPurple.cgColor, UIColor.systemPink.cgColor]
+        gradient.locations = [0,1]
+        view.layer.addSublayer(gradient)
+        gradient.frame = view.frame
+    }
+}
+
 /*extension UIViewController {
     static let hud = JGProgressHUD(style: .dark)
 

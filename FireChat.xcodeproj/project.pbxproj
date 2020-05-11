@@ -18,6 +18,7 @@
 		10703BE52468E35D006DDA09 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10703BE42468E35D006DDA09 /* Extensions.swift */; };
 		10703BE72468ECF1006DDA09 /* InputContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10703BE62468ECF1006DDA09 /* InputContainer.swift */; };
 		10703BE92468EF67006DDA09 /* CustomTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10703BE82468EF67006DDA09 /* CustomTextField.swift */; };
+		10703BEB24698AD0006DDA09 /* CustomButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10703BEA24698AD0006DDA09 /* CustomButton.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -34,6 +35,7 @@
 		10703BE42468E35D006DDA09 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		10703BE62468ECF1006DDA09 /* InputContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputContainer.swift; sourceTree = "<group>"; };
 		10703BE82468EF67006DDA09 /* CustomTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTextField.swift; sourceTree = "<group>"; };
+		10703BEA24698AD0006DDA09 /* CustomButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomButton.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -118,6 +120,7 @@
 			children = (
 				10703BE62468ECF1006DDA09 /* InputContainer.swift */,
 				10703BE82468EF67006DDA09 /* CustomTextField.swift */,
+				10703BEA24698AD0006DDA09 /* CustomButton.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -211,6 +214,7 @@
 			files = (
 				10703BC22468DA91006DDA09 /* AppDelegate.swift in Sources */,
 				10703BE52468E35D006DDA09 /* Extensions.swift in Sources */,
+				10703BEB24698AD0006DDA09 /* CustomButton.swift in Sources */,
 				10703BE12468E0BD006DDA09 /* LoginController.swift in Sources */,
 				10703BDE2468DB05006DDA09 /* ConversationsController.swift in Sources */,
 				10703BE92468EF67006DDA09 /* CustomTextField.swift in Sources */,

@@ -27,16 +27,7 @@ class LoginController: UIViewController {
         return InputContainerView(image: #imageLiteral(resourceName: "ic_lock_outline_white_2x"), textField: passwordTextField)
     }()
     
-    private let loginButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.setTitle("Log In", for: .normal)
-        button.layer.cornerRadius = 5.0
-        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 18)
-        button.backgroundColor = #colorLiteral(red: 0.9098039269, green: 0.4784313738, blue: 0.6431372762, alpha: 1)
-        button.setTitleColor(.white, for: .normal)
-        button.setHeight(height: 50)
-        return button
-    }()
+    private let loginButton = CustomButton(title: "Log In")
     
     private let emailTextField = CustomTextField(placeholder: "Email")
     
@@ -100,14 +91,5 @@ class LoginController: UIViewController {
                                      paddingLeft: 32,
                                      paddingBottom: 16,
                                      paddingRight: 32)
-    }
-    
-    func configureGradientLayer() {
-        let gradient = CAGradientLayer()
-        gradient.colors = [UIColor.systemPurple.cgColor, UIColor.systemPink.cgColor]
-        gradient.locations = [0,1]
-        view.layer.addSublayer(gradient)
-        gradient.frame = view.frame
-        
     }
 }
