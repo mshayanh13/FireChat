@@ -20,6 +20,7 @@
 		10703BE92468EF67006DDA09 /* CustomTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10703BE82468EF67006DDA09 /* CustomTextField.swift */; };
 		10703BEB24698AD0006DDA09 /* CustomButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10703BEA24698AD0006DDA09 /* CustomButton.swift */; };
 		10703BED2469BA02006DDA09 /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10703BEC2469BA02006DDA09 /* LoginViewModel.swift */; };
+		10703BEF2469C1C9006DDA09 /* RegistrationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10703BEE2469C1C9006DDA09 /* RegistrationViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -38,6 +39,7 @@
 		10703BE82468EF67006DDA09 /* CustomTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTextField.swift; sourceTree = "<group>"; };
 		10703BEA24698AD0006DDA09 /* CustomButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomButton.swift; sourceTree = "<group>"; };
 		10703BEC2469BA02006DDA09 /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
+		10703BEE2469C1C9006DDA09 /* RegistrationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -113,7 +115,7 @@
 		10703BDA2468DACD006DDA09 /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
-				10703BEC2469BA02006DDA09 /* LoginViewModel.swift */,
+				10703BF02469C1DF006DDA09 /* Authentication */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -140,6 +142,15 @@
 			children = (
 				10703BE02468E0BD006DDA09 /* LoginController.swift */,
 				10703BE22468E0C7006DDA09 /* RegistrationController.swift */,
+			);
+			path = Authentication;
+			sourceTree = "<group>";
+		};
+		10703BF02469C1DF006DDA09 /* Authentication */ = {
+			isa = PBXGroup;
+			children = (
+				10703BEC2469BA02006DDA09 /* LoginViewModel.swift */,
+				10703BEE2469C1C9006DDA09 /* RegistrationViewModel.swift */,
 			);
 			path = Authentication;
 			sourceTree = "<group>";
@@ -216,6 +227,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				10703BC22468DA91006DDA09 /* AppDelegate.swift in Sources */,
+				10703BEF2469C1C9006DDA09 /* RegistrationViewModel.swift in Sources */,
 				10703BE52468E35D006DDA09 /* Extensions.swift in Sources */,
 				10703BEB24698AD0006DDA09 /* CustomButton.swift in Sources */,
 				10703BE12468E0BD006DDA09 /* LoginController.swift in Sources */,
