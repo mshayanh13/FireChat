@@ -12,6 +12,8 @@ class LoginController: UIViewController {
     
     //MARK: Properties
     
+    private var loginViewModel = LoginViewModel()
+    
     private let iconImage: UIImageView = {
         let iv = UIImageView()
         iv.image = UIImage(systemName: "bubble.right")
@@ -27,7 +29,12 @@ class LoginController: UIViewController {
         return InputContainerView(image: #imageLiteral(resourceName: "ic_lock_outline_white_2x"), textField: passwordTextField)
     }()
     
-    private let loginButton = CustomButton(title: "Log In")
+    private let loginButton: CustomButton = {
+        let button = CustomButton(title: "Log In")
+        button.isEnabled = false
+        button.addTarget(self, action: #selector(handleLogin), for: .touchUpInside)
+        return button
+    }()
     
     private let emailTextField = CustomTextField(placeholder: "Email")
     
@@ -62,7 +69,31 @@ class LoginController: UIViewController {
         navigationController?.pushViewController(controller, animated: true)
     }
     
+    @objc func textDidChange(sender: UITextField) {
+        if sender == emailTextField {
+            loginViewModel.email = sender.text
+        } else {
+            loginViewModel.password = sender.text
+        }
+        
+        checkFormStatus()
+    }
+    
+    @objc func handleLogin() {
+        print("DEBUG: Handle login here...")
+    }
+    
     //MARK: Helpers
+    
+    func checkFormStatus() {
+        if loginViewModel.formIsValid {
+            loginButton.isEnabled = true
+            loginButton.backgroundColor = #colorLiteral(red: 0.8078431487, green: 0.02745098062, blue: 0.3333333433, alpha: 1)
+        } else {
+            loginButton.isEnabled = false
+            loginButton.backgroundColor = #colorLiteral(red: 0.9098039269, green: 0.4784313738, blue: 0.6431372762, alpha: 1)
+        }
+    }
     
     func configureUI() {
         navigationController?.navigationBar.isHidden = true
@@ -91,5 +122,8 @@ class LoginController: UIViewController {
                                      paddingLeft: 32,
                                      paddingBottom: 16,
                                      paddingRight: 32)
+        
+        emailTextField.addTarget(self, action: #selector(textDidChange), for: .editingChanged)
+        passwordTextField.addTarget(self, action: #selector(textDidChange), for: .editingChanged)
     }
 }

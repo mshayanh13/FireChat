@@ -19,6 +19,7 @@
 		10703BE72468ECF1006DDA09 /* InputContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10703BE62468ECF1006DDA09 /* InputContainer.swift */; };
 		10703BE92468EF67006DDA09 /* CustomTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10703BE82468EF67006DDA09 /* CustomTextField.swift */; };
 		10703BEB24698AD0006DDA09 /* CustomButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10703BEA24698AD0006DDA09 /* CustomButton.swift */; };
+		10703BED2469BA02006DDA09 /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10703BEC2469BA02006DDA09 /* LoginViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -36,6 +37,7 @@
 		10703BE62468ECF1006DDA09 /* InputContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputContainer.swift; sourceTree = "<group>"; };
 		10703BE82468EF67006DDA09 /* CustomTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTextField.swift; sourceTree = "<group>"; };
 		10703BEA24698AD0006DDA09 /* CustomButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomButton.swift; sourceTree = "<group>"; };
+		10703BEC2469BA02006DDA09 /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -111,6 +113,7 @@
 		10703BDA2468DACD006DDA09 /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
+				10703BEC2469BA02006DDA09 /* LoginViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -220,6 +223,7 @@
 				10703BE92468EF67006DDA09 /* CustomTextField.swift in Sources */,
 				10703BE72468ECF1006DDA09 /* InputContainer.swift in Sources */,
 				10703BE32468E0C7006DDA09 /* RegistrationController.swift in Sources */,
+				10703BED2469BA02006DDA09 /* LoginViewModel.swift in Sources */,
 				10703BC42468DA91006DDA09 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
