@@ -87,31 +87,19 @@ class RegistrationController: UIViewController {
             let fullName = fullNameTextField.text,
             let username = usernameTextField.text?.lowercased() else { return }
         
-        self.uploadImage { (imageURL, error) in
-            
-            self.createUser(email: email, password: password) { (userUid, error) in
-                
-                guard let userUid = userUid else {
-                    print(error!)
-                    return
-                }
-                
-                var data: [String: Any] = ["email": email, "fullname": fullName, "uid": userUid, "username": username]
-                
-                if let imageURL = imageURL {
-                    data["profileImageURL"] = imageURL
-                }
-                
-                self.uploadUserInfoToDatabase(data: data) { (error) in
-                    if let error = error {
-                        print(error)
-                        return
-                    }
-                    
-                    self.dismiss(animated: true, completion: nil)
-                }
+        let registrationCredentials = RegistrationCredentials(email: email,
+                                                              password: password,
+                                                              fullName: fullName,
+                                                              username: username,
+                                                              profileImage: profileImage)
+        
+        AuthService.shared.createUser(credentials: registrationCredentials) { (error) in
+            if let error = error {
+                print(error)
+                return
             }
             
+            self.dismiss(animated: true, completion: nil)
         }
         
     }
@@ -177,67 +165,7 @@ class RegistrationController: UIViewController {
         passwordTextField.addTarget(self, action: #selector(textDidChange), for: .editingChanged)
     }
     
-    func uploadImage(completionHandler: @escaping (_ profileImageURL: String?, _ errorMessage: String?)->Void) {
-        guard let profileImage = profileImage, let imageData = profileImage.jpegData(compressionQuality: 0.3) else {
-            completionHandler(nil, "Error")
-            return
-        }
-        let filename = NSUUID().uuidString
-        let ref = Storage.storage().reference(withPath: "/profile_images/\(filename)")
-        
-        ref.putData(imageData, metadata: nil) { (meta, error) in
-            if let error = error {
-                print("DEBUG: Failed to uplaod image with error: \(error.localizedDescription)")
-                completionHandler(nil, error.localizedDescription)
-                return
-            }
-            
-            ref.downloadURL { (url, error) in
-                guard let profileImageURL = url?.absoluteString else {
-                    completionHandler(nil, "Error")
-                    return
-                }
-                
-                completionHandler(profileImageURL, nil)
-                
-            }
-        }
-    }
     
-    func createUser(email: String, password: String, completionHandler: @escaping (_ uid: String?, _ errorMessage: String?)->Void) {
-        
-        Auth.auth().createUser(withEmail: email, password: password) { (result, error) in
-            if let error = error {
-                print("DEBUG: Failed to create user with error: \(error.localizedDescription)")
-                completionHandler(nil, error.localizedDescription)
-            }
-            
-            guard let uid = result?.user.uid else {
-                completionHandler(nil, "Error")
-                return
-            }
-            
-            completionHandler(uid, nil)
-            
-        }
-    }
-    
-    func uploadUserInfoToDatabase(data: [String: Any], completionHandler: @escaping (_ errorMessage: String?)->Void) {
-        
-        guard let uid = data["uid"] as? String else { return }
-        Firestore.firestore().collection("users").document(uid).setData(data) { (error) in
-            
-            if let error = error {
-                print("DEBUG: Failed to upload user data with error: \(error.localizedDescription)")
-                completionHandler(error.localizedDescription)
-                return
-            }
-            
-            print("DEBUG: Did create user...")
-            completionHandler(nil)
-            
-        }
-    }
 }
 
 //MARK: UIImagePickerViewDelegate

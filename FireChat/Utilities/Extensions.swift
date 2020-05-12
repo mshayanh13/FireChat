@@ -7,7 +7,7 @@
 //
 
 import UIKit
-//import JGProgressHUD
+import JGProgressHUD
 
 extension UIView {
     func anchor(top: NSLayoutYAxisAnchor? = nil,
@@ -82,16 +82,6 @@ extension UIView {
 }
 
 extension UIViewController {
-    func configureGradientLayer() {
-        let gradient = CAGradientLayer()
-        gradient.colors = [UIColor.systemPurple.cgColor, UIColor.systemPink.cgColor]
-        gradient.locations = [0,1]
-        view.layer.addSublayer(gradient)
-        gradient.frame = view.frame
-    }
-}
-
-/*extension UIViewController {
     static let hud = JGProgressHUD(style: .dark)
 
     func configureGradientLayer() {
@@ -136,4 +126,4 @@ extension UIViewController {
         alert.addAction(UIAlertAction(title: "Ok", style: .cancel, handler: nil))
         present(alert, animated: true, completion: nil)
     }
-}*/
+}
