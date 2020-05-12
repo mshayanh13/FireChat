@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Firebase
 
 protocol AuthenticationControllerProtocol {
     func checkFormStatus()
@@ -84,7 +85,18 @@ class LoginController: UIViewController {
     }
     
     @objc func handleLogin() {
-        print("DEBUG: Handle login here...")
+        
+        guard let email = emailTextField.text, let password = passwordTextField.text else { return }
+        
+        Auth.auth().signIn(withEmail: email, password: password) { (result, error) in
+            if let error = error {
+                print("DEBUG: Error signing in with error: \(error.localizedDescription)")
+                return
+            }
+            
+            self.dismiss(animated: true, completion: nil)
+        }
+        
     }
     
     //MARK: Helpers
