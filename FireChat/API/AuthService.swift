@@ -31,7 +31,6 @@ struct AuthService {
             self.createUser(email: credentials.email, password: credentials.password) { (userUid, error) in
                 
                 guard let userUid = userUid else {
-                    print(error!)
                     completionHandler(error!)
                     return
                 }
@@ -58,14 +57,13 @@ struct AuthService {
         
         ref.putData(imageData, metadata: nil) { (meta, error) in
             if let error = error {
-                print("DEBUG: Failed to uplaod image with error: \(error.localizedDescription)")
                 completionHandler(nil, error.localizedDescription)
                 return
             }
             
             ref.downloadURL { (url, error) in
                 guard let profileImageURL = url?.absoluteString else {
-                    completionHandler(nil, "Error")
+                    completionHandler(nil, error?.localizedDescription)
                     return
                 }
                 
@@ -79,12 +77,11 @@ struct AuthService {
         
         Auth.auth().createUser(withEmail: email, password: password) { (result, error) in
             if let error = error {
-                print("DEBUG: Failed to create user with error: \(error.localizedDescription)")
                 completionHandler(nil, error.localizedDescription)
             }
             
             guard let uid = result?.user.uid else {
-                completionHandler(nil, "Error")
+                completionHandler(nil, "Error Getting User Uid")
                 return
             }
             
@@ -99,12 +96,10 @@ struct AuthService {
         Firestore.firestore().collection("users").document(uid).setData(data) { (error) in
             
             if let error = error {
-                print("DEBUG: Failed to upload user data with error: \(error.localizedDescription)")
                 completionHandler(error.localizedDescription)
                 return
             }
             
-            print("DEBUG: Did create user...")
             completionHandler(nil)
             
         }

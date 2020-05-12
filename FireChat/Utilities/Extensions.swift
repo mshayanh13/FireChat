@@ -126,4 +126,8 @@ extension UIViewController {
         alert.addAction(UIAlertAction(title: "Ok", style: .cancel, handler: nil))
         present(alert, animated: true, completion: nil)
     }
+    
+    @objc func tapDone(sender: Any) {
+        self.view.endEditing(true)
+    }
 }

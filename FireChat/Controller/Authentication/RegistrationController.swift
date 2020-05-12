@@ -43,13 +43,28 @@ class RegistrationController: UIViewController {
         return InputContainerView(image: #imageLiteral(resourceName: "ic_lock_outline_white_2x"), textField: passwordTextField)
     }()
     
-    private let emailTextField = CustomTextField(placeholder: "Email")
-    private let fullNameTextField = CustomTextField(placeholder: "Full Name")
-    private let usernameTextField = CustomTextField(placeholder: "Username")
+    private let emailTextField : CustomTextField = {
+        let textField = CustomTextField(placeholder: "Email")
+        textField.addDoneButton(selector: #selector(tapDone(sender:)))
+        return textField
+    }()
+    
+    private let fullNameTextField: CustomTextField = {
+        let textField = CustomTextField(placeholder: "Full Name")
+        textField.addDoneButton(selector: #selector(tapDone(sender:)))
+        return textField
+    }()
+    
+    private let usernameTextField: CustomTextField = {
+        let textField = CustomTextField(placeholder: "Username")
+        textField.addDoneButton(selector: #selector(tapDone(sender:)))
+        return textField
+    }()
     
     private let passwordTextField: CustomTextField = {
         let textField = CustomTextField(placeholder: "Password")
         textField.isSecureTextEntry = true
+        textField.addDoneButton(selector: #selector(tapDone(sender:)))
         return textField
     }()
     
@@ -93,15 +108,17 @@ class RegistrationController: UIViewController {
                                                               username: username,
                                                               profileImage: profileImage)
         
+        showLoader(true, withText: "Signing You Up")
+        
         AuthService.shared.createUser(credentials: registrationCredentials) { (error) in
             if let error = error {
-                print(error)
+                self.showError(error)
+                self.showLoader(false)
                 return
             }
-            
+            self.showLoader(false)
             self.dismiss(animated: true, completion: nil)
         }
-        
     }
     
     @objc func textDidChange(sender: UITextField) {
@@ -126,6 +143,18 @@ class RegistrationController: UIViewController {
     
     @objc func handleShowLogin() {
         navigationController?.popViewController(animated: true)
+    }
+    
+    @objc func keyboardWillShow() {
+        if view.frame.origin.y == 0 {
+            self.view.frame.origin.y -= 200
+        }
+    }
+    
+    @objc func keyboardWillHide() {
+        if view.frame.origin.y != 0 {
+            self.view.frame.origin.y = 0
+        }
     }
     
     //MARK: Helpers
@@ -163,6 +192,9 @@ class RegistrationController: UIViewController {
         fullNameTextField.addTarget(self, action: #selector(textDidChange), for: .editingChanged)
         usernameTextField.addTarget(self, action: #selector(textDidChange), for: .editingChanged)
         passwordTextField.addTarget(self, action: #selector(textDidChange), for: .editingChanged)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
     

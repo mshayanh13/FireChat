@@ -8,6 +8,7 @@
 
 import UIKit
 import Firebase
+import JGProgressHUD
 
 protocol AuthenticationControllerProtocol {
     func checkFormStatus()
@@ -41,11 +42,16 @@ class LoginController: UIViewController {
         return button
     }()
     
-    private let emailTextField = CustomTextField(placeholder: "Email")
+    private let emailTextField: CustomTextField = {
+        let textField = CustomTextField(placeholder: "Email")
+        textField.addDoneButton(selector: #selector(tapDone(sender:)))
+        return textField
+    }()
     
     private let passwordTextField: CustomTextField = {
         let textField = CustomTextField(placeholder: "Password")
         textField.isSecureTextEntry = true
+        textField.addDoneButton(selector: #selector(tapDone(sender:)))
         return textField
     }()
     
@@ -88,12 +94,16 @@ class LoginController: UIViewController {
         
         guard let email = emailTextField.text, let password = passwordTextField.text else { return }
         
+        showLoader(true, withText: "Logging In")
+        
         AuthService.shared.logUserIn(email: email, password: password) { (result, error) in
             if let error = error {
-                print("DEBUG: Error signing in with error: \(error.localizedDescription)")
+                self.showError(error.localizedDescription)
+                self.showLoader(false)
                 return
             }
             
+            self.showLoader(false)
             self.dismiss(animated: true, completion: nil)
         }
         
