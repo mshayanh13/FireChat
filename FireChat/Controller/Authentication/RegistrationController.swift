@@ -87,7 +87,7 @@ class RegistrationController: UIViewController {
             let fullName = fullNameTextField.text,
             let username = usernameTextField.text?.lowercased() else { return }
         
-        uploadImage { (imageURL, error) in
+        self.uploadImage { (imageURL, error) in
             
             self.createUser(email: email, password: password) { (userUid, error) in
                 
