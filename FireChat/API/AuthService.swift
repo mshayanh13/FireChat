@@ -35,7 +35,7 @@ struct AuthService {
                     return
                 }
                 
-                var data: [String: Any] = ["email": credentials.email, "fullname": credentials.fullName, "uid": userUid, "username": credentials.username]
+                var data: [String: Any] = ["email": credentials.email, "fullName": credentials.fullName, "uid": userUid, "username": credentials.username]
                 
                 if let imageURL = imageURL {
                     data["profileImageURL"] = imageURL
