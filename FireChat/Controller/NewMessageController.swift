@@ -59,7 +59,7 @@ extension NewMessageController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as? UserCell else { return UserCell() }
-        let user = users[indexPath.row]
+        cell.user = users[indexPath.row]
         return cell
     }
 }
