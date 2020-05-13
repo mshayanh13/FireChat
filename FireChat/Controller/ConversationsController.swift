@@ -81,7 +81,7 @@ class ConversationsController: UIViewController {
     func configureUI() {
         view.backgroundColor = .white
         
-        configureNavigationBar()
+        configureNavigationBar(withTitle: "Messages", prefersLargeTitles: true)
         configureTableView()
         
         let image = UIImage(systemName: "person.circle.fill")
@@ -103,24 +103,6 @@ class ConversationsController: UIViewController {
         
         view.addSubview(tableView)
         tableView.frame = view.frame
-    }
-    
-    func configureNavigationBar() {
-        let appearance = UINavigationBarAppearance()
-        appearance.configureWithOpaqueBackground()
-        appearance.largeTitleTextAttributes = [.foregroundColor: UIColor.white]
-        appearance.backgroundColor = .purple
-        
-        navigationController?.navigationBar.standardAppearance = appearance
-        navigationController?.navigationBar.compactAppearance = appearance
-        navigationController?.navigationBar.scrollEdgeAppearance = appearance
-        
-        navigationController?.navigationBar.prefersLargeTitles = true
-        navigationItem.title = "Messages"
-        navigationController?.navigationBar.tintColor = .white
-        navigationController?.navigationBar.isTranslucent = true
-        
-        navigationController?.navigationBar.overrideUserInterfaceStyle = .dark
     }
 }
 
