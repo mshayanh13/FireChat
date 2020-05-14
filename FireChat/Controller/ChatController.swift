@@ -15,9 +15,12 @@ class ChatController: UICollectionViewController {
     //MARK: Properties
     
     private let user: User
+    private var messages = [Message]()
+    var fromCurrentUser = false
     
     private lazy var customInputView: CustomInputAccessoryView = {
         let iv = CustomInputAccessoryView(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: 50))
+        iv.delegate = self
         return iv
     }()
     
@@ -58,11 +61,12 @@ class ChatController: UICollectionViewController {
 
 extension ChatController {
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 5
+        return messages.count
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath)
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as? MessageCell else { return MessageCell() }
+        cell.messsage = messages[indexPath.row]
         return cell
     }
 }
@@ -77,4 +81,15 @@ extension ChatController: UICollectionViewDelegateFlowLayout {
         return CGSize(width: view.frame.width, height: 50)
     }
     
+}
+
+extension ChatController: CustomInputAccessoryViewDelegate {
+    func inputView(_ inputView: CustomInputAccessoryView, wantsToSendMessage message: String) {
+        inputView.clearTextField()
+        
+        fromCurrentUser.toggle()
+        let message = Message(text: message, isFromCurrentUser: fromCurrentUser)
+        messages.append(message)
+        collectionView.reloadData()
+    }
 }

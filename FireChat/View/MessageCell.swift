@@ -12,6 +12,10 @@ class MessageCell: UICollectionViewCell {
     
     //MARK: Properties
     
+    var messsage: Message? {
+        didSet { configure() }
+    }
+    
     private let profileImageView: UIImageView = {
         let iv = UIImageView()
         iv.contentMode = .scaleAspectFill
@@ -27,7 +31,6 @@ class MessageCell: UICollectionViewCell {
         tv.isScrollEnabled = true
         tv.isEditable = false
         tv.textColor = .white
-        tv.text = "Test Message"
         return tv
     }()
     
@@ -60,6 +63,15 @@ class MessageCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    //MARK: Helpers
     
+    func configure() {
+        guard let message = messsage else { return }
+        let viewModel = MessageViewModel(message: message)
+        
+        bubbleContainer.backgroundColor = viewModel.messageBackgroundColor
+        textView.textColor = viewModel.messageTextColor
+        textView.text = message.text
+    }
     
 }
