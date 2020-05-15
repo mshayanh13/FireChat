@@ -61,8 +61,9 @@ class CustomInputAccessoryView: UIView {
         sendButton.setDimensions(height: 50, width: 50)
         
         addSubview(messageInputTextView)
+        messageInputTextView.setHeight(height: 50)
         messageInputTextView.anchor(top: topAnchor, left: leftAnchor, bottom: safeAreaLayoutGuide.bottomAnchor, right: sendButton.leftAnchor,
-                                    paddingTop: 12, paddingLeft: 4, paddingBottom: 8, paddingRight: 8)
+                                    paddingTop: 12, paddingLeft: 4, paddingBottom: 12, paddingRight: 8)
         
         addSubview(placeholderLabel)
         placeholderLabel.anchor(left: messageInputTextView.leftAnchor, paddingLeft: 4)
@@ -75,14 +76,14 @@ class CustomInputAccessoryView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-//    override var intrinsicContentSize: CGSize {
-//        return .zero
-//    }
+    override var intrinsicContentSize: CGSize {
+        return .zero
+    }
     
     //MARK: Selectors
     
     @objc func handleSendMessage() {
-        guard let message = messageInputTextView.text else { return }
+        guard let message = messageInputTextView.text, message != "" else { return }
         delegate?.inputView(self, wantsToSendMessage: message)
     }
     
