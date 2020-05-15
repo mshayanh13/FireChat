@@ -32,6 +32,7 @@
 		10703C06246D982F006DDA09 /* MessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10703C05246D982F006DDA09 /* MessageCell.swift */; };
 		10703C08246DE09E006DDA09 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10703C07246DE09E006DDA09 /* Message.swift */; };
 		10703C0A246DE2FF006DDA09 /* MessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10703C09246DE2FF006DDA09 /* MessageViewModel.swift */; };
+		10703C0C246E1987006DDA09 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10703C0B246E1987006DDA09 /* Constants.swift */; };
 		42A0AC2F143548CD9B3D8EAE /* Pods_FireChat.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A0A3D11BC946B551217F8E76 /* Pods_FireChat.framework */; };
 /* End PBXBuildFile section */
 
@@ -63,6 +64,7 @@
 		10703C05246D982F006DDA09 /* MessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageCell.swift; sourceTree = "<group>"; };
 		10703C07246DE09E006DDA09 /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		10703C09246DE2FF006DDA09 /* MessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageViewModel.swift; sourceTree = "<group>"; };
+		10703C0B246E1987006DDA09 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		A0A3D11BC946B551217F8E76 /* Pods_FireChat.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FireChat.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		BF9FDE861D87D759FF776BCC /* Pods-FireChat.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FireChat.release.xcconfig"; path = "Target Support Files/Pods-FireChat/Pods-FireChat.release.xcconfig"; sourceTree = "<group>"; };
 		E7BF29EB06E7B2E19C503A5A /* Pods-FireChat.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FireChat.debug.xcconfig"; path = "Target Support Files/Pods-FireChat/Pods-FireChat.debug.xcconfig"; sourceTree = "<group>"; };
@@ -122,6 +124,7 @@
 			isa = PBXGroup;
 			children = (
 				10703BE42468E35D006DDA09 /* Extensions.swift */,
+				10703C0B246E1987006DDA09 /* Constants.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -329,6 +332,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				10703BC22468DA91006DDA09 /* AppDelegate.swift in Sources */,
+				10703C0C246E1987006DDA09 /* Constants.swift in Sources */,
 				10703BEF2469C1C9006DDA09 /* RegistrationViewModel.swift in Sources */,
 				10703BE52468E35D006DDA09 /* Extensions.swift in Sources */,
 				10703BF6246A2B7E006DDA09 /* AuthService.swift in Sources */,
