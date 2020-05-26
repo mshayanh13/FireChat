@@ -80,6 +80,9 @@ extension ChatController {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as? MessageCell else { return MessageCell() }
         cell.messsage = messages[indexPath.row]
         cell.messsage?.user = user
+        
+        cell.bubbleWidthAnchor.constant = estimateFrame(for: messages[indexPath.row].text).width + 42
+        
         return cell
     }
 }
@@ -91,15 +94,20 @@ extension ChatController: UICollectionViewDelegateFlowLayout {
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 50)
-        let estimatedSizeCell = MessageCell(frame: frame)
-        estimatedSizeCell.messsage = messages[indexPath.row]
-        estimatedSizeCell.layoutIfNeeded()
+        var height: CGFloat = 80
+        let width = UIScreen.main.bounds.width
         
-        let targetSize = CGSize(width: view.frame.width, height: 1000)
-        let estimatedSize = estimatedSizeCell.systemLayoutSizeFitting(targetSize)
+        let message = messages[indexPath.row]
+        let estimatedFrame = estimateFrame(for: message.text)
+        height = estimatedFrame.height + 20
         
-        return .init(width: view.frame.width, height: estimatedSize.height)
+        return CGSize(width: width, height: height)
+    }
+    
+    private func estimateFrame(for text: String) -> CGRect {
+        let size = CGSize(width: 200, height: 1000)
+        let options = NSStringDrawingOptions.usesFontLeading.union(.usesLineFragmentOrigin)
+        return NSString(string: text).boundingRect(with: size, options: options, attributes: [NSAttributedString.Key.font : UIFont.systemFont(ofSize: 16)], context: nil)
     }
     
 }

@@ -16,6 +16,7 @@ class MessageCell: UICollectionViewCell {
         didSet { configure() }
     }
     
+    var bubbleWidthAnchor: NSLayoutConstraint!
     var bubbleLeftAnchor: NSLayoutConstraint!
     var bubbleRightAnchor: NSLayoutConstraint!
     
@@ -56,7 +57,8 @@ class MessageCell: UICollectionViewCell {
         addSubview(bubbleContainer)
         bubbleContainer.layer.cornerRadius = 12
         bubbleContainer.anchor(top: topAnchor, bottom: bottomAnchor)
-        bubbleContainer.widthAnchor.constraint(lessThanOrEqualToConstant: 250).isActive = true
+        bubbleWidthAnchor = bubbleContainer.widthAnchor.constraint(lessThanOrEqualToConstant: 250)
+        bubbleWidthAnchor.isActive = true
         
         bubbleLeftAnchor = bubbleContainer.leftAnchor.constraint(equalTo: profileImageView.rightAnchor, constant: 12)
         bubbleRightAnchor = bubbleContainer.rightAnchor.constraint(equalTo: rightAnchor, constant: -12)
@@ -65,7 +67,7 @@ class MessageCell: UICollectionViewCell {
         bubbleRightAnchor.isActive = false
         
         addSubview(textView)
-        textView.anchor(top: bubbleContainer.topAnchor, left: bubbleContainer.leftAnchor, bottom: bubbleContainer.bottomAnchor, right: bubbleContainer.rightAnchor, paddingTop: 4, paddingLeft: 12, paddingBottom: 4, paddingRight: 12)
+        textView.anchor(top: bubbleContainer.topAnchor, left: bubbleContainer.leftAnchor, bottom: bubbleContainer.bottomAnchor, right: bubbleContainer.rightAnchor, paddingTop: 0, paddingLeft: 12, paddingBottom: 4, paddingRight: 0)
     }
     
     required init?(coder: NSCoder) {

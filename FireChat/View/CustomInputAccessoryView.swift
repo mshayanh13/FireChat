@@ -49,7 +49,6 @@ class CustomInputAccessoryView: UIView {
         super.init(frame: frame)
         
         backgroundColor = .white
-        autoresizingMask = .flexibleHeight
         
         layer.shadowOpacity = 0.25
         layer.shadowRadius = 10
@@ -74,10 +73,6 @@ class CustomInputAccessoryView: UIView {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-    
-    override var intrinsicContentSize: CGSize {
-        return .zero
     }
     
     //MARK: Selectors
