@@ -72,7 +72,13 @@ class ConversationsController: UIViewController {
                 self.conversationDictionary[message.chatPartnerId] = conversation
             }
             self.showLoader(false)
-            self.conversations = Array(self.conversationDictionary.values)
+            
+            self.conversationDictionary.removeValue(forKey: Auth.auth().currentUser?.uid ?? "nothing")
+            self.conversations = Array(self.conversationDictionary.values).sorted(by: { (c1, c2) -> Bool in
+                let result = c1.message.timestamp.compare(c2.message.timestamp)
+                return result == .orderedDescending
+
+            })
             
             self.tableView.reloadData()
         }
