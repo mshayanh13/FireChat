@@ -79,7 +79,7 @@ class ProfileController: UITableViewController {
 
 extension ProfileController {
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return ProfileViewModel.allCases.count
+        return 0 //ProfileViewModel.allCases.count
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

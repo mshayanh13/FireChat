@@ -97,7 +97,7 @@ class ConversationsController: UIViewController {
             conversations.removeAll()
             presentLoginScreen()
         } catch let error {
-            print("DEBUG: Error signing out with error: \(error.localizedDescription)")
+            showError(error.localizedDescription)
         }
     }
     

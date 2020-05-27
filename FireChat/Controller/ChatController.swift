@@ -49,6 +49,12 @@ class ChatController: UICollectionViewController {
         return true
     }
     
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        
+        NotificationCenter.default.removeObserver(self)
+    }
+    
     //MARK: API
     
     func fetchMessages() {
@@ -71,6 +77,20 @@ class ChatController: UICollectionViewController {
         collectionView.register(MessageCell.self, forCellWithReuseIdentifier: reuseIdentifier)
         collectionView.alwaysBounceVertical = true
         collectionView.keyboardDismissMode = .interactive
+        
+        setupKeyboardObservers()
+    }
+    
+    func setupKeyboardObservers() {
+        NotificationCenter.default.addObserver(self, selector: #selector(handleKeyboardDidShow), name: UIResponder.keyboardDidShowNotification, object: nil)
+    }
+    
+    //MARK: Selectors
+    
+    @objc func handleKeyboardDidShow() {
+        guard messages.count > 0 else { return }
+        let indexPath = IndexPath(item: messages.count-1, section: 0)
+        collectionView.scrollToItem(at: indexPath, at: .bottom, animated: true)
     }
 }
 
@@ -89,6 +109,8 @@ extension ChatController {
         return cell
     }
 }
+
+//MARK: UICollectionViewDelegateFlowLayout
 
 extension ChatController: UICollectionViewDelegateFlowLayout {
     
@@ -115,6 +137,8 @@ extension ChatController: UICollectionViewDelegateFlowLayout {
     
 }
 
+//MARK: CustomInputAccessoryViewDelegate
+
 extension ChatController: CustomInputAccessoryViewDelegate {
     func inputView(_ inputView: CustomInputAccessoryView, wantsToSendMessage message: String) {
         
@@ -122,11 +146,17 @@ extension ChatController: CustomInputAccessoryViewDelegate {
         
         Service.uploadMessage(message, to: user) { (error) in
             if let error = error {
-                print("DEBUG: Failed to upload message with error: \(error.localizedDescription)")
+                self.showError(error.localizedDescription)
                 return
             }
             
             inputView.clearTextField()
         }
     }
+}
+
+//MARK:
+
+extension ChatController {
+    
 }
