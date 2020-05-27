@@ -46,9 +46,10 @@ class NewMessageController: UITableViewController {
     //MARK: API
     
     func fetchUsers() {
+        showLoader(true)
         Service.fetchUsers() { (users) in
+            self.showLoader(false)
             self.users = users
-            self.removeCurrentUser()
             self.tableView.reloadData()
         }
     }
@@ -62,13 +63,6 @@ class NewMessageController: UITableViewController {
         tableView.tableFooterView = UIView()
         tableView.register(UserCell.self, forCellReuseIdentifier: reuseIdentifier)
         tableView.rowHeight = 80
-    }
-    
-    func removeCurrentUser() {
-        let currentUserUid = Service.getCurrentUserUid()
-        users.removeAll { (user) -> Bool in
-            user.uid == currentUserUid
-        }
     }
     
     func configureSearchController() {

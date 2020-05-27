@@ -16,15 +16,14 @@ struct Service {
     }
     
     static func fetchUsers(completion: @escaping ([User])-> Void) {
-        var users = [User]()
         COLLECTION_USERS.getDocuments { (snapshot, error) in
-            snapshot?.documents.forEach({ (document) in
-                
-                let dict = document.data()
-                let user = User(dictionary: dict)
-                users.append(user)
-                completion(users)
-            })
+            guard var users = snapshot?.documents.map({ User(dictionary: $0.data()) }) else { return }
+            
+            if let i = users.firstIndex(where: {$0.uid == Auth.auth().currentUser?.uid}) {
+                users.remove(at: i)
+            }
+            
+            completion(users)
         }
     }
     
@@ -45,7 +44,8 @@ struct Service {
             snapshot?.documentChanges.forEach({ (change) in
                 let dictionary = change.document.data()
                 let message = Message(dictionary: dictionary)
-                self.fetchUser(withUid: message.toId) { (user) in
+                
+                self.fetchUser(withUid: message.chatPartnerId) { (user) in
                     let conversation = Conversation(user: user, message: message)
                     converstaions.append(conversation)
                     completion(converstaions)

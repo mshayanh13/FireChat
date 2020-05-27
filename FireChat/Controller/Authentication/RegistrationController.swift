@@ -16,6 +16,8 @@ class RegistrationController: UIViewController {
     private var registrationViewModel = RegistrationViewModel()
     private var profileImage: UIImage?
     
+    weak var delegate: AuthenticationDelegate?
+    
     private let plusPhotoButton: UIButton = {
         let button = UIButton(type: .system)
         button.setImage(#imageLiteral(resourceName: "plus_photo"), for: .normal)
@@ -112,12 +114,12 @@ class RegistrationController: UIViewController {
         
         AuthService.shared.createUser(credentials: registrationCredentials) { (error) in
             if let error = error {
-                self.showError(error)
                 self.showLoader(false)
+                self.showError(error)
                 return
             }
             self.showLoader(false)
-            self.dismiss(animated: true, completion: nil)
+            self.delegate?.authenticationComplete()
         }
     }
     
