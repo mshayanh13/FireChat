@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import MobileCoreServices
+import AVFoundation
 
 private let reuseIdentifier = "MessageCell"
 
@@ -23,6 +25,10 @@ class ChatController: UICollectionViewController {
         iv.delegate = self
         return iv
     }()
+    
+    var startingFrame: CGRect?
+    var blackBackground: UIView?
+    var startingImageView: UIImageView?
     
     //MARK: Lifecycle
     
@@ -106,11 +112,17 @@ extension ChatController {
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as? MessageCell else { return MessageCell() }
-        cell.messsage = messages[indexPath.row]
-        cell.messsage?.user = user
+        let message = messages[indexPath.row]
         
-        cell.bubbleWidthAnchor.constant = estimateFrame(for: messages[indexPath.row].text).width + 42
+        cell.message = message
+        cell.message?.user = user
+        cell.delegate = self
         
+        if let text = message.text {
+            cell.bubbleWidthAnchor.constant = estimateFrame(for: text).width + 42
+        } else {
+            cell.bubbleWidthAnchor.constant = 200
+        }
         return cell
     }
 }
@@ -126,10 +138,14 @@ extension ChatController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         var height: CGFloat = 80
         let width = UIScreen.main.bounds.width
-        
         let message = messages[indexPath.row]
-        let estimatedFrame = estimateFrame(for: message.text)
-        height = estimatedFrame.height + 20
+        
+        if let text = message.text {
+            let estimatedFrame = estimateFrame(for: text)
+            height = estimatedFrame.height + 20
+        } else if let imageWidth = message.imageWidth, let imageHeight = message.imageHeight {
+            height = CGFloat(imageHeight / imageWidth * 200)
+        }
         
         return CGSize(width: width, height: height)
     }
@@ -149,7 +165,7 @@ extension ChatController: CustomInputAccessoryViewDelegate {
         
         inputView.clearTextField()
         
-        Service.uploadMessage(message, to: user) { (error) in
+        Service.uploadTextMessage(message, to: user) { (error) in
             if let error = error {
                 self.showError(error.localizedDescription)
                 return
@@ -160,7 +176,14 @@ extension ChatController: CustomInputAccessoryViewDelegate {
     }
     
     func sendMediaMessage() {
+        let imagePicker = UIImagePickerController()
         
+        imagePicker.allowsEditing = true
+        imagePicker.delegate = self
+        imagePicker.modalPresentationStyle = .fullScreen
+        imagePicker.mediaTypes = [kUTTypeImage as String]//, kUTTypeMovie as String]
+            
+        present(imagePicker, animated: true, completion: nil)
     }
 }
 
@@ -168,10 +191,106 @@ extension ChatController: CustomInputAccessoryViewDelegate {
 
 extension ChatController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-        
+        dismiss(animated: true)
     }
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        let filename = NSUUID().uuidString + ".mp4"
+        
+        if let videoUrl = info[.mediaURL] as? URL//, let newUrl = getVideoURL(from: videoUrl, with: filename)
+        {
+            
+            //handleVideoSelected(with: newUrl, and: filename)
+            
+        } else {
+            
+            handleImageSelected(with: info)
+        }
+        
+        dismiss(animated: true, completion: nil)
+    }
+    
+    private func handleVideoSelected() {
         
     }
+    
+    private func handleImageSelected(with info: [UIImagePickerController.InfoKey: Any]) {
+        var selectedImage: UIImage?
+        
+        if let editedImage = info[.editedImage] as? UIImage {
+            selectedImage = editedImage
+        } else if let originalImage = info[.originalImage] as? UIImage {
+            selectedImage = originalImage
+        }
+        
+        if let selectedImage = selectedImage {
+            
+            Service.uploadImageMessage(selectedImage, to: user) { (error) in
+                if let error = error {
+                    self.showError(error.localizedDescription)
+                    return
+                }
+            }
+        }
+    }
+}
+
+//MARK: MessageCellProtocol
+extension ChatController: MessageCellProtocol {
+    func handleZoomIn(for startingImageView: UIImageView) {
+        startingFrame = startingImageView.superview?.convert(startingImageView.frame, to: nil)
+        self.startingImageView = startingImageView
+        self.startingImageView?.isHidden = true
+        
+        guard let startingFrame = startingFrame, let keyWindow = UIApplication.shared.windows.first(where: { $0.isKeyWindow }) else { return }
+        blackBackground = UIView(frame: keyWindow.frame)
+        
+        let zoomingImageView = UIImageView(frame: startingFrame)
+        zoomingImageView.backgroundColor = .red
+        zoomingImageView.image = startingImageView.image
+        blackBackground?.isUserInteractionEnabled = true
+        blackBackground?.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleZoomOut)))
+        zoomingImageView.isUserInteractionEnabled = true
+        
+        if let blackBackground = blackBackground {
+            
+            blackBackground.backgroundColor = .black
+            blackBackground.alpha = 0
+            keyWindow.addSubview(blackBackground)
+            
+            blackBackground.addSubview(zoomingImageView)
+            UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+                blackBackground.alpha = 1
+                self.customInputView.alpha = 0
+                
+                let height = startingFrame.height / startingFrame.width * keyWindow.frame.width
+                
+                zoomingImageView.frame = CGRect(x: 0, y: 0, width: keyWindow.frame.width, height: height)
+                zoomingImageView.center = keyWindow.center
+            }, completion: nil)
+        
+        }
+    }
+    
+    @objc func handleZoomOut(tapGesture: UITapGestureRecognizer) {
+        guard let startingFrame = startingFrame, let zoomOutImageView = tapGesture.view, let blackBackground = blackBackground else { return }
+        zoomOutImageView.layer.cornerRadius = 16
+        zoomOutImageView.clipsToBounds = true
+        
+        UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+            zoomOutImageView.frame = startingFrame
+            blackBackground.alpha = 0
+            self.customInputView.alpha = 1
+        }) { (completed) in
+            zoomOutImageView.removeFromSuperview()
+            self.startingImageView?.isHidden = false
+        }
+    }
+    
+    func handlePlay(for videoUrl: String) {
+        guard let url = URL(string: videoUrl) else { return }
+        
+    }
+    
+    
 }

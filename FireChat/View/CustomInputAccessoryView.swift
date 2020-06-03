@@ -33,6 +33,7 @@ class CustomInputAccessoryView: UIView {
         let uploadImageView = UIImageView()
         uploadImageView.image = UIImage(named: "upload_image_icon")
         uploadImageView.isUserInteractionEnabled = true
+        uploadImageView.contentMode = .scaleAspectFit
         uploadImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleSendMedia)))
         return uploadImageView
     }()
@@ -62,7 +63,7 @@ class CustomInputAccessoryView: UIView {
         sendButton.anchor(top: topAnchor, bottom: layoutMarginsGuide.bottomAnchor, right: rightAnchor, paddingTop: 12, paddingBottom: 12, paddingRight: 8, width: 50)
         
         addSubview(uploadImageView)
-        uploadImageView.anchor(top: topAnchor, left: leftAnchor, bottom: layoutMarginsGuide.bottomAnchor, paddingTop: 12, paddingLeft: 8, paddingBottom: 12, width: 50)
+        uploadImageView.anchor(top: topAnchor, left: leftAnchor, bottom: layoutMarginsGuide.bottomAnchor, paddingTop: 12, paddingLeft: 8, paddingBottom: 12, width: 50, height: 50)
         
         addSubview(messageInputTextField)
         messageInputTextField.anchor(top: topAnchor,
@@ -89,6 +90,7 @@ class CustomInputAccessoryView: UIView {
     }
     
     @objc func handleSendMedia() {
+        clearTextField()
         delegate?.sendMediaMessage()
     }
     

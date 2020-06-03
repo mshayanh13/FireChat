@@ -73,18 +73,89 @@ struct Service {
         }
     }
     
-    static func uploadMessage(_ message: String, to user: User, completion: ((Error?) -> Void)?) {
+    static func uploadTextMessage(_ message: String, to user: User, completion: @escaping ((Error?) -> Void)) {
+        
+        let properties = ["text": message]
+        uploadMessage(with: properties, to: user, completion: completion)
+        
+    }
+    
+    static func uploadImageMessage(_ image: UIImage, to user: User, completion: @escaping ((Error?) -> Void)) {
+        uploadImageToStorage(image) { (imageUrl, error) in
+            if let error = error {
+                completion(error)
+            } else if let imageUrl = imageUrl {
+                let properties = ["imageUrl": imageUrl,
+                "imageWidth": image.size.width,
+                "imageHeight": image.size.height] as [String : Any]
+                
+                uploadMessage(with: properties, to: user, completion: completion)
+            }
+        }
+    }
+    
+    static func uploadImageToStorage(_ image: UIImage, completion: @escaping (_ imageUrl: String?, _ error: Error?) -> Void) {
+        if let imageData = image.jpegData(compressionQuality: 0.2) {
+            let profileImageRef = Storage.storage().reference().child("message_images/\(NSUUID().uuidString).jpg")
+            let metadata = StorageMetadata()
+            metadata.contentType = "image/jpeg"
+            
+            profileImageRef.putData(imageData, metadata: metadata) { (metadata, error) in
+                if let error = error {
+                    completion(nil, error)
+                } else if let _ = metadata {
+                    profileImageRef.downloadURL { (url, error) in
+                        if let error = error {
+                            completion(nil, error)
+                        } else if let url = url {
+                            completion(url.absoluteString, nil)
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    static func uploadVideoMessage(_ image: UIImage, to user: User, completion: @escaping ((Error?) -> Void)) {
+        
+    }
+    
+    static func uploadMessage(with properties: [String: Any], to user: User, completion: @escaping ((Error?) -> Void)) {
+        
         guard let currentUid = Auth.auth().currentUser?.uid else { return }
         
-        let data: [String: Any] = ["text": message,
-                                   "fromId": currentUid,
+        var data: [String: Any] = ["fromId": currentUid,
                                    "toId": user.uid,
                                    "timestamp": Timestamp(date: Date())]
-        COLLECTION_MESSAGES.document(currentUid).collection(user.uid).addDocument(data: data) { _ in
-            COLLECTION_MESSAGES.document(user.uid).collection(currentUid).addDocument(data: data, completion: completion)
-            COLLECTION_MESSAGES.document(currentUid).collection("recent-messages").document(user.uid).setData(data)
-            COLLECTION_MESSAGES.document(user.uid).collection("recent-messages").document(currentUid).setData(data)
+        
+        properties.forEach { (key, value) in
+            data[key] = value
         }
+        
+        COLLECTION_MESSAGES.document(currentUid).collection(user.uid).addDocument(data: data) { error in
+            if let error = error {
+                completion(error)
+            } else {
+                COLLECTION_MESSAGES.document(user.uid).collection(currentUid).addDocument(data: data) { error in
+                    if let error = error {
+                        completion(error)
+                    } else {
+                        COLLECTION_MESSAGES.document(currentUid).collection("recent-messages").document(user.uid).setData(data) { (error) in
+                            if let error = error {
+                                completion(error)
+                            } else {
+                                COLLECTION_MESSAGES.document(user.uid).collection("recent-messages").document(currentUid).setData(data) { error in
+                                    if let error = error {
+                                        completion(error)
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
     }
     
 }
