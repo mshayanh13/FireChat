@@ -24,8 +24,15 @@ class ProfileController: UITableViewController {
     }
     
     weak var delegate: ProfileControllerDelegate?
-    
-    private lazy var headerView = ProfileHeader(frame: .init(x: 0, y: 0, width: view.frame.width, height: 380))
+
+    private lazy var headerView: ProfileHeader = {
+
+        let screenHeight = view.frame.height
+        let header = ProfileHeader(frame: .init(x: 0, y: 0,
+                                                width: view.frame.width,
+                                                height: screenHeight / 2 - 50))
+        return header
+    }()
     
     private let footerView = ProfileFooter()
     
@@ -41,6 +48,13 @@ class ProfileController: UITableViewController {
         super.viewWillAppear(animated)
         navigationController?.navigationBar.isHidden = true
         navigationController?.navigationBar.barStyle = .black
+    }
+    
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+
+        tableView.tableHeaderView?.layoutIfNeeded()
+        tableView.tableFooterView?.layoutIfNeeded()
     }
     
     //MARK: Selectors
@@ -59,6 +73,26 @@ class ProfileController: UITableViewController {
     //MARK: Helpers
     
     func configureUI() {
+        guard let tableView = tableView else { return }
+        
+        tableView.backgroundColor = .white
+        tableView.tableHeaderView = headerView
+        
+        headerView.widthAnchor.constraint(equalTo: tableView.widthAnchor).isActive = true
+        headerView.delegate = self
+        tableView.register(ProfileCell.self, forCellReuseIdentifier: reuseIdentifier)
+        tableView.contentInsetAdjustmentBehavior = .never
+        tableView.rowHeight = 64
+        tableView.backgroundColor = .systemGroupedBackground
+        
+        footerView.delegate = self
+        footerView.frame = .init(x: 0, y: 0, width: view.frame.width, height: 100)
+        tableView.tableFooterView = footerView
+        footerView.widthAnchor.constraint(equalTo: tableView.widthAnchor).isActive = true
+        footerView.heightAnchor.constraint(equalToConstant: 100).isActive = true
+    }
+    
+    func configureUI2() {
         tableView.backgroundColor = .white
         
         tableView.tableHeaderView = headerView
@@ -79,7 +113,8 @@ class ProfileController: UITableViewController {
 
 extension ProfileController {
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 0 //ProfileViewModel.allCases.count
+        //return 0
+        return ProfileViewModel.allCases.count
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

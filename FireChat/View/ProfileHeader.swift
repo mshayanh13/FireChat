@@ -62,7 +62,8 @@ class ProfileHeader: UIView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        configureUI()
+        let height = frame.height
+        configureUI(size: height / 2)
     }
     
     required init?(coder: NSCoder) {
@@ -88,15 +89,15 @@ class ProfileHeader: UIView {
         
     }
     
-    func configureUI() {
+    func configureUI(size: CGFloat = 200) {
         configureGradientLayer()
         
-        profileImageView.setDimensions(height: 200, width: 200)
-        profileImageView.layer.cornerRadius = 200 / 2
+        profileImageView.setDimensions(height: size, width: size)
+        profileImageView.layer.cornerRadius = size / 2
         
         addSubview(profileImageView)
         profileImageView.centerX(inView: self)
-        profileImageView.anchor(top: topAnchor, paddingTop: 96)
+        profileImageView.anchor(top: topAnchor, paddingTop: 50)
         
         let stack = UIStackView(arrangedSubviews: [fullnameLabel, usernameLabel])
         stack.axis = .vertical
@@ -104,19 +105,11 @@ class ProfileHeader: UIView {
         
         addSubview(stack)
         stack.centerX(inView: self)
-        stack.anchor(top: profileImageView.bottomAnchor, paddingTop: 16)
+        stack.anchor(top: profileImageView.bottomAnchor, paddingTop: 25)
         
         addSubview(dismissButton)
-        dismissButton.anchor(top: topAnchor, left: leftAnchor, paddingTop: 44, paddingLeft: 12)
-        dismissButton.setDimensions(height: 48, width: 48)
-    }
-    
-    func configureGradientLayer() {
-        let gradient = CAGradientLayer()
-        gradient.colors = [UIColor.systemPurple.cgColor, UIColor.systemPink.cgColor]
-        gradient.locations = [0, 1]
-        layer.addSublayer(gradient)
-        gradient.frame = bounds
+        dismissButton.anchor(top: topAnchor, left: leftAnchor, paddingTop: 20, paddingLeft: 12)
+        dismissButton.setDimensions(height: 40, width: 40)
     }
     
 }

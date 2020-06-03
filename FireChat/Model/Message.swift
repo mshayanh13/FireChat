@@ -15,6 +15,10 @@ struct Message {
     let fromId: String
     var timestamp: Timestamp!
     var user: User?
+    var imageUrl: String?
+    var imageHeight: Double?
+    var imageWidth: Double?
+    var videoUrl: String?
     
     let isFromCurrentUser: Bool
     
@@ -29,6 +33,11 @@ struct Message {
         self.timestamp = dictionary["timestamp"] as? Timestamp ?? Timestamp(date: Date())
         
         self.isFromCurrentUser = fromId == Auth.auth().currentUser?.uid
+        
+        self.imageUrl = dictionary["imageUrl"] as? String
+        self.imageHeight = dictionary["imageHeight"] as? Double
+        self.imageWidth = dictionary["imageWidth"] as? Double
+        self.videoUrl = dictionary["videoUrl"] as? String
     }
 }
 

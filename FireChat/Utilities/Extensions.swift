@@ -79,17 +79,19 @@ extension UIView {
         translatesAutoresizingMaskIntoConstraints = false
         widthAnchor.constraint(equalToConstant: width).isActive = true
     }
+    
+    func configureGradientLayer() {
+        let gradientView = GradientView(frame: bounds)
+        insertSubview(gradientView, at: 0)
+    }
 }
 
 extension UIViewController {
     static let hud = JGProgressHUD(style: .dark)
 
     func configureGradientLayer() {
-        let gradient = CAGradientLayer()
-        gradient.colors = [UIColor.systemPurple.cgColor, UIColor.systemPink.cgColor]
-        gradient.locations = [0, 1]
-        view.layer.addSublayer(gradient)
-        gradient.frame = view.frame
+        let gradientView = GradientView(frame: self.view.bounds)
+        self.view.insertSubview(gradientView, at: 0)
     }
     
     func showLoader(_ show: Bool, withText text: String? = "Loading") {

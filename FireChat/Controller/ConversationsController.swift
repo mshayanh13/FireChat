@@ -43,6 +43,17 @@ class ConversationsController: UIViewController {
         configureNavigationBar(withTitle: "Messages", prefersLargeTitles: true)
     }
     
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+        tableView.layoutIfNeeded()
+        
+        navigationItem.largeTitleDisplayMode = .always
+        coordinator.animate(alongsideTransition: { (_) in
+            self.navigationController?.navigationBar.sizeToFit()
+            
+        }, completion: nil)
+    }
+    
     //MARK: Selectors
     
     @objc func showProfile() {
@@ -136,7 +147,7 @@ class ConversationsController: UIViewController {
         tableView.dataSource = self
         
         view.addSubview(tableView)
-        tableView.frame = view.frame
+        tableView.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, right: view.rightAnchor)
     }
     
     func showChatController(forUser user: User) {

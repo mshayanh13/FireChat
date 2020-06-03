@@ -55,6 +55,11 @@ class ChatController: UICollectionViewController {
         NotificationCenter.default.removeObserver(self)
     }
     
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+        collectionView.collectionViewLayout.invalidateLayout()
+    }
+    
     //MARK: API
     
     func fetchMessages() {
@@ -73,7 +78,7 @@ class ChatController: UICollectionViewController {
     func configureUI() {
         collectionView.backgroundColor = .white
         configureNavigationBar(withTitle: user.username, prefersLargeTitles: false)
-        
+        collectionView.contentInset = UIEdgeInsets(top: 8, left: 0, bottom: 8, right: 0)
         collectionView.register(MessageCell.self, forCellWithReuseIdentifier: reuseIdentifier)
         collectionView.alwaysBounceVertical = true
         collectionView.keyboardDismissMode = .interactive
@@ -153,10 +158,20 @@ extension ChatController: CustomInputAccessoryViewDelegate {
             inputView.clearTextField()
         }
     }
+    
+    func sendMediaMessage() {
+        
+    }
 }
 
-//MARK:
+//MARK: UIImagePickerControllerDelegate
 
-extension ChatController {
+extension ChatController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        
+    }
     
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        
+    }
 }

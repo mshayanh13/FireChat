@@ -20,6 +20,7 @@ class RegistrationController: UIViewController {
     
     private let plusPhotoButton: UIButton = {
         let button = UIButton(type: .system)
+        button.translatesAutoresizingMaskIntoConstraints = false
         button.setImage(#imageLiteral(resourceName: "plus_photo"), for: .normal)
         button.tintColor = .white
         button.addTarget(self, action: #selector(handleSelectPhoto), for: .touchUpInside)
@@ -34,15 +35,21 @@ class RegistrationController: UIViewController {
     }()
     
     private lazy var fullNameContainerView: InputContainerView = {
-        return InputContainerView(image: #imageLiteral(resourceName: "ic_person_outline_white_2x"), textField: fullNameTextField)
+        let containerView = InputContainerView(image: #imageLiteral(resourceName: "ic_person_outline_white_2x"), textField: fullNameTextField)
+        containerView.translatesAutoresizingMaskIntoConstraints = false
+        return containerView
     }()
     
     private lazy var usernameContainerView: InputContainerView = {
-        return InputContainerView(image: #imageLiteral(resourceName: "ic_person_outline_white_2x"), textField: usernameTextField)
+        let containerView = InputContainerView(image: #imageLiteral(resourceName: "ic_person_outline_white_2x"), textField: usernameTextField)
+        containerView.translatesAutoresizingMaskIntoConstraints = false
+        return containerView
     }()
     
     private lazy var passwordContainerView: UIView = {
-        return InputContainerView(image: #imageLiteral(resourceName: "ic_lock_outline_white_2x"), textField: passwordTextField)
+        let containerView = InputContainerView(image: #imageLiteral(resourceName: "ic_lock_outline_white_2x"), textField: passwordTextField)
+        containerView.translatesAutoresizingMaskIntoConstraints = false
+        return containerView
     }()
     
     private let emailTextField : CustomTextField = {
@@ -72,6 +79,7 @@ class RegistrationController: UIViewController {
     
     private let signUpButton: CustomButton = {
         let button = CustomButton(title: "Sign Up")
+        button.translatesAutoresizingMaskIntoConstraints = false
         button.isEnabled = false
         button.addTarget(self, action: #selector(handleRegistration), for: .touchUpInside)
         return button
@@ -79,6 +87,7 @@ class RegistrationController: UIViewController {
     
     private let alreadyHaveAccountButton: UIButton = {
         let button = UIButton(type: .system)
+        button.translatesAutoresizingMaskIntoConstraints = false
         let attributedTitle = NSMutableAttributedString(string: "Already have an account? ",
                                                         attributes: [.font: UIFont.systemFont(ofSize: 16), .foregroundColor: UIColor.white])
         attributedTitle.append(NSAttributedString(string: "Sign Up",
@@ -88,12 +97,34 @@ class RegistrationController: UIViewController {
         return button
     }()
     
+    let scrollView: UIScrollView = {
+        let scrollView = UIScrollView()
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        return scrollView
+    }()
+    
+    var stackView: UIStackView!
+    
+    var portraitConstraints: [NSLayoutConstraint] = []
+    var landscapeConstraints: [NSLayoutConstraint] = []
+    
     //MARK: Lifecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
         configureUI()
         configureNotificationObservers()
+    }
+    
+    override func viewDidLayoutSubviews() {
+        let size = UIScreen.main.bounds.size
+        if size.width > size.height {
+            NSLayoutConstraint.deactivate(portraitConstraints)
+            NSLayoutConstraint.activate(landscapeConstraints)
+        } else {
+            NSLayoutConstraint.deactivate(landscapeConstraints)
+            NSLayoutConstraint.activate(portraitConstraints)
+        }
     }
     
     //MARK: Selectors
@@ -161,32 +192,80 @@ class RegistrationController: UIViewController {
     
     //MARK: Helpers
     
+    func constraints() {
+        portraitConstraints = [
+            plusPhotoButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            plusPhotoButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 32),
+            plusPhotoButton.widthAnchor.constraint(equalToConstant: view.frame.height / 4),
+            plusPhotoButton.heightAnchor.constraint(equalToConstant: view.frame.height / 4),
+            alreadyHaveAccountButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
+            alreadyHaveAccountButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -16),
+            alreadyHaveAccountButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
+            scrollView.topAnchor.constraint(equalTo: plusPhotoButton.bottomAnchor, constant: 32),
+            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
+            scrollView.bottomAnchor.constraint(equalTo: alreadyHaveAccountButton.topAnchor, constant: -32),
+            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
+            stackView.topAnchor.constraint(equalTo: scrollView.contentLayoutGuide.topAnchor),
+            stackView.leadingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.leadingAnchor),
+            stackView.bottomAnchor.constraint(equalTo: scrollView.contentLayoutGuide.bottomAnchor),
+            stackView.trailingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.trailingAnchor),
+            stackView.widthAnchor.constraint(equalTo: scrollView.frameLayoutGuide.widthAnchor)
+        ]
+        
+        landscapeConstraints = [
+            plusPhotoButton.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            plusPhotoButton.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 32),
+            plusPhotoButton.widthAnchor.constraint(equalToConstant: view.frame.height / 4),
+            plusPhotoButton.heightAnchor.constraint(equalToConstant: view.frame.height / 4),
+            
+            alreadyHaveAccountButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
+            alreadyHaveAccountButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -16),
+            alreadyHaveAccountButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
+            
+            scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 32),
+            scrollView.leadingAnchor.constraint(equalTo: plusPhotoButton.trailingAnchor, constant: 32),
+            scrollView.bottomAnchor.constraint(equalTo: alreadyHaveAccountButton.topAnchor, constant: -32),
+            scrollView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -32),
+            
+            stackView.topAnchor.constraint(equalTo: scrollView.contentLayoutGuide.topAnchor),
+            stackView.leadingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.leadingAnchor),
+            stackView.bottomAnchor.constraint(equalTo: scrollView.contentLayoutGuide.bottomAnchor),
+            stackView.trailingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.trailingAnchor),
+            stackView.widthAnchor.constraint(equalTo: scrollView.frameLayoutGuide.widthAnchor, constant: -32)
+        ]
+    }
+    
     func configureUI() {
         configureGradientLayer()
         
         view.addSubview(plusPhotoButton)
-        plusPhotoButton.centerX(inView: view)
-        plusPhotoButton.anchor(top: view.safeAreaLayoutGuide.topAnchor, paddingTop: 32)
-        plusPhotoButton.setDimensions(height: 200.0, width: 200.0)
+        view.addSubview(alreadyHaveAccountButton)
         
-        let stackView = UIStackView(arrangedSubviews: [emailContainerView,
+        scrollView.showsVerticalScrollIndicator = true
+        
+        view.addSubview(scrollView)
+        
+        stackView = UIStackView(arrangedSubviews: [emailContainerView,
                                                        fullNameContainerView,
                                                        usernameContainerView,
                                                        passwordContainerView,
                                                        signUpButton])
+        stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .vertical
+        stackView.distribution = .equalSpacing
         stackView.spacing = 16
         
-        view.addSubview(stackView)
-        stackView.anchor(top: plusPhotoButton.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 32, paddingLeft: 32, paddingRight: 32)
+        scrollView.addSubview(stackView)
+        constraints()
         
-        view.addSubview(alreadyHaveAccountButton)
-        alreadyHaveAccountButton.anchor(left: view.leftAnchor,
-                                     bottom: view.safeAreaLayoutGuide.bottomAnchor,
-                                     right: view.rightAnchor,
-                                     paddingLeft: 32,
-                                     paddingBottom: 16,
-                                     paddingRight: 32)
+        let size = UIScreen.main.bounds.size
+        if size.width > size.height {
+            NSLayoutConstraint.deactivate(portraitConstraints)
+            NSLayoutConstraint.activate(landscapeConstraints)
+        } else {
+            NSLayoutConstraint.deactivate(landscapeConstraints)
+            NSLayoutConstraint.activate(portraitConstraints)
+        }
     }
     
     func configureNotificationObservers() {

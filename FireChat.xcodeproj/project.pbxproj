@@ -40,6 +40,7 @@
 		10842D62247DF53D00D26713 /* ProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10842D61247DF53D00D26713 /* ProfileViewModel.swift */; };
 		10842D64247DF5EC00D26713 /* ProfileCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10842D63247DF5EC00D26713 /* ProfileCell.swift */; };
 		10842D66247DFA8800D26713 /* ProfileFooter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10842D65247DFA8800D26713 /* ProfileFooter.swift */; };
+		10842D70247FFDA500D26713 /* GradientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10842D6F247FFDA500D26713 /* GradientView.swift */; };
 		42A0AC2F143548CD9B3D8EAE /* Pods_FireChat.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A0A3D11BC946B551217F8E76 /* Pods_FireChat.framework */; };
 /* End PBXBuildFile section */
 
@@ -79,6 +80,7 @@
 		10842D61247DF53D00D26713 /* ProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewModel.swift; sourceTree = "<group>"; };
 		10842D63247DF5EC00D26713 /* ProfileCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileCell.swift; sourceTree = "<group>"; };
 		10842D65247DFA8800D26713 /* ProfileFooter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileFooter.swift; sourceTree = "<group>"; };
+		10842D6F247FFDA500D26713 /* GradientView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GradientView.swift; sourceTree = "<group>"; };
 		A0A3D11BC946B551217F8E76 /* Pods_FireChat.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FireChat.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		BF9FDE861D87D759FF776BCC /* Pods-FireChat.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FireChat.release.xcconfig"; path = "Target Support Files/Pods-FireChat/Pods-FireChat.release.xcconfig"; sourceTree = "<group>"; };
 		E7BF29EB06E7B2E19C503A5A /* Pods-FireChat.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FireChat.debug.xcconfig"; path = "Target Support Files/Pods-FireChat/Pods-FireChat.debug.xcconfig"; sourceTree = "<group>"; };
@@ -188,6 +190,7 @@
 				10842D5F247DEF4000D26713 /* ProfileHeader.swift */,
 				10842D63247DF5EC00D26713 /* ProfileCell.swift */,
 				10842D65247DFA8800D26713 /* ProfileFooter.swift */,
+				10842D6F247FFDA500D26713 /* GradientView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -354,6 +357,7 @@
 			files = (
 				10842D5E247DEDD200D26713 /* ProfileController.swift in Sources */,
 				10703BC22468DA91006DDA09 /* AppDelegate.swift in Sources */,
+				10842D70247FFDA500D26713 /* GradientView.swift in Sources */,
 				10703C0C246E1987006DDA09 /* Constants.swift in Sources */,
 				10842D62247DF53D00D26713 /* ProfileViewModel.swift in Sources */,
 				10703BEF2469C1C9006DDA09 /* RegistrationViewModel.swift in Sources */,

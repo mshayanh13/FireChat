@@ -28,21 +28,28 @@ class LoginController: UIViewController {
     
     private let iconImage: UIImageView = {
         let iv = UIImageView()
+        iv.translatesAutoresizingMaskIntoConstraints = false
         iv.image = UIImage(systemName: "bubble.right")
+        iv.contentMode = .scaleAspectFit
         iv.tintColor = .white
         return iv
     }()
     
     private lazy var emailContainerView: InputContainerView = {
-        return InputContainerView(image: #imageLiteral(resourceName: "ic_mail_outline_white_2x"), textField: emailTextField)
+        let containerView = InputContainerView(image: #imageLiteral(resourceName: "ic_mail_outline_white_2x"), textField: emailTextField)
+        containerView.translatesAutoresizingMaskIntoConstraints = false
+        return containerView
     }()
     
     private lazy var passwordContainerView: UIView = {
-        return InputContainerView(image: #imageLiteral(resourceName: "ic_lock_outline_white_2x"), textField: passwordTextField)
+        let containerView = InputContainerView(image: #imageLiteral(resourceName: "ic_lock_outline_white_2x"), textField: passwordTextField)
+        containerView.translatesAutoresizingMaskIntoConstraints = false
+        return containerView
     }()
     
     private let loginButton: CustomButton = {
         let button = CustomButton(title: "Log In")
+        button.translatesAutoresizingMaskIntoConstraints = false
         button.isEnabled = false
         button.addTarget(self, action: #selector(handleLogin), for: .touchUpInside)
         return button
@@ -63,6 +70,7 @@ class LoginController: UIViewController {
     
     private let dontHaveAccountButton: UIButton = {
         let button = UIButton(type: .system)
+        button.translatesAutoresizingMaskIntoConstraints = false
         let attributedTitle = NSMutableAttributedString(string: "Don't have an account? ",
                                                         attributes: [.font: UIFont.systemFont(ofSize: 16), .foregroundColor: UIColor.white])
         attributedTitle.append(NSAttributedString(string: "Sign Up",
@@ -72,11 +80,34 @@ class LoginController: UIViewController {
         return button
     }()
     
+    let scrollView: UIScrollView = {
+        let scrollView = UIScrollView()
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        return scrollView
+    }()
+    
+    var stackView: UIStackView!
+    
+    var portraitConstraints: [NSLayoutConstraint] = []
+    var landscapeConstraints: [NSLayoutConstraint] = []
+    
     //MARK: Lifecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
         configureUI()
+        configureNotificationObservers()
+    }
+    
+    override func viewDidLayoutSubviews() {
+        let size = UIScreen.main.bounds.size
+        if size.width > size.height {
+            NSLayoutConstraint.deactivate(portraitConstraints)
+            NSLayoutConstraint.activate(landscapeConstraints)
+        } else {
+            NSLayoutConstraint.deactivate(landscapeConstraints)
+            NSLayoutConstraint.activate(portraitConstraints)
+        }
     }
     
     //MARK: Selectors
@@ -116,7 +147,71 @@ class LoginController: UIViewController {
         
     }
     
+    @objc func keyboardWillShow() {
+        if view.frame.origin.y == 0 {
+            self.view.frame.origin.y -= 150
+        }
+    }
+    
+    @objc func keyboardWillHide() {
+        if view.frame.origin.y != 0 {
+            self.view.frame.origin.y = 0
+        }
+    }
+    
     //MARK: Helpers
+    
+    func constraints() {
+        
+        portraitConstraints = [
+            
+            iconImage.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            iconImage.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 32),
+            iconImage.widthAnchor.constraint(equalToConstant: view.frame.height / 6),
+            iconImage.heightAnchor.constraint(equalToConstant: view.frame.height / 6),
+            
+            dontHaveAccountButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
+            dontHaveAccountButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -16),
+            dontHaveAccountButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
+            
+            scrollView.topAnchor.constraint(equalTo: iconImage.bottomAnchor, constant: 32),
+            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
+            scrollView.bottomAnchor.constraint(equalTo: dontHaveAccountButton.topAnchor, constant: -32),
+            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
+            
+            stackView.topAnchor.constraint(equalTo: scrollView.contentLayoutGuide.topAnchor),
+            stackView.leadingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.leadingAnchor),
+            stackView.bottomAnchor.constraint(equalTo: scrollView.contentLayoutGuide.bottomAnchor),
+            stackView.trailingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.trailingAnchor),
+            
+            stackView.widthAnchor.constraint(equalTo: scrollView.frameLayoutGuide.widthAnchor)
+        ]
+        
+        landscapeConstraints = [
+            
+            iconImage.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            iconImage.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor, constant: 32),
+            iconImage.widthAnchor.constraint(equalToConstant: view.frame.height / 4),
+            iconImage.heightAnchor.constraint(equalToConstant: view.frame.height / 4),
+            
+            dontHaveAccountButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
+            dontHaveAccountButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -16),
+            dontHaveAccountButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
+            
+            scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 32),
+            scrollView.leadingAnchor.constraint(equalTo: iconImage.trailingAnchor, constant: 32),
+            scrollView.bottomAnchor.constraint(equalTo: dontHaveAccountButton.topAnchor, constant: -32),
+            scrollView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -32),
+            
+            stackView.topAnchor.constraint(equalTo: scrollView.contentLayoutGuide.topAnchor),
+            stackView.leadingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.leadingAnchor),
+            stackView.bottomAnchor.constraint(equalTo: scrollView.contentLayoutGuide.bottomAnchor),
+            stackView.trailingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.trailingAnchor),
+            
+            stackView.heightAnchor.constraint(equalTo: self.view.heightAnchor, multiplier: 0.70),
+            stackView.widthAnchor.constraint(equalTo: scrollView.frameLayoutGuide.widthAnchor, constant: -32)
+        ]
+    }
     
     func configureUI() {
         navigationController?.navigationBar.isHidden = true
@@ -125,29 +220,39 @@ class LoginController: UIViewController {
         configureGradientLayer()
         
         view.addSubview(iconImage)
-        iconImage.centerX(inView: view)
-        iconImage.anchor(top: view.safeAreaLayoutGuide.topAnchor, paddingTop: 32)
-        iconImage.setDimensions(height: 120.0, width: 120.0)
+        view.addSubview(dontHaveAccountButton)
         
-        let stackView = UIStackView(arrangedSubviews: [emailContainerView,
+        scrollView.showsVerticalScrollIndicator = true
+
+        view.addSubview(scrollView)
+
+        stackView = UIStackView(arrangedSubviews: [emailContainerView,
                                                        passwordContainerView,
                                                        loginButton])
+        stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .vertical
+        stackView.distribution = .equalSpacing
         stackView.spacing = 16
+
+        scrollView.addSubview(stackView)
+        constraints()
         
-        view.addSubview(stackView)
-        stackView.anchor(top: iconImage.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 32, paddingLeft: 32, paddingRight: 32)
-        
-        view.addSubview(dontHaveAccountButton)
-        dontHaveAccountButton.anchor(left: view.leftAnchor,
-                                     bottom: view.safeAreaLayoutGuide.bottomAnchor,
-                                     right: view.rightAnchor,
-                                     paddingLeft: 32,
-                                     paddingBottom: 16,
-                                     paddingRight: 32)
-        
+        let size = UIScreen.main.bounds.size
+        if size.width > size.height {
+            NSLayoutConstraint.deactivate(portraitConstraints)
+            NSLayoutConstraint.activate(landscapeConstraints)
+        } else {
+            NSLayoutConstraint.deactivate(landscapeConstraints)
+            NSLayoutConstraint.activate(portraitConstraints)
+        }
+    }
+    
+    func configureNotificationObservers() {
         emailTextField.addTarget(self, action: #selector(textDidChange), for: .editingChanged)
         passwordTextField.addTarget(self, action: #selector(textDidChange), for: .editingChanged)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
 }
 
