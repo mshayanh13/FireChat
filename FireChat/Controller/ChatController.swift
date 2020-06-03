@@ -8,7 +8,7 @@
 
 import UIKit
 import MobileCoreServices
-import AVFoundation
+import AVKit
 
 private let reuseIdentifier = "MessageCell"
 
@@ -45,6 +45,12 @@ class ChatController: UICollectionViewController {
         super.viewDidLoad()
         configureUI()
         fetchMessages()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        self.collectionView.scrollToItem(at: [0, self.messages.count - 1], at: .bottom, animated: false)
     }
     
     override var inputAccessoryView: UIView? {
@@ -181,7 +187,7 @@ extension ChatController: CustomInputAccessoryViewDelegate {
         imagePicker.allowsEditing = true
         imagePicker.delegate = self
         imagePicker.modalPresentationStyle = .fullScreen
-        imagePicker.mediaTypes = [kUTTypeImage as String]//, kUTTypeMovie as String]
+        imagePicker.mediaTypes = [kUTTypeImage as String, kUTTypeMovie as String]
             
         present(imagePicker, animated: true, completion: nil)
     }
@@ -195,12 +201,10 @@ extension ChatController: UIImagePickerControllerDelegate, UINavigationControlle
     }
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-        let filename = NSUUID().uuidString + ".mp4"
         
-        if let videoUrl = info[.mediaURL] as? URL//, let newUrl = getVideoURL(from: videoUrl, with: filename)
-        {
+        if let videoUrl = info[.mediaURL] as? URL {
             
-            //handleVideoSelected(with: newUrl, and: filename)
+            handleVideoSelected(with: videoUrl)
             
         } else {
             
@@ -210,8 +214,16 @@ extension ChatController: UIImagePickerControllerDelegate, UINavigationControlle
         dismiss(animated: true, completion: nil)
     }
     
-    private func handleVideoSelected() {
+    private func handleVideoSelected(with videoUrl: URL) {
+        self.navigationItem.title = "Uploading Video"
         
+        Service.uploadVideoMessage(videoUrl, to: user) { (error) in
+            if let error = error {
+                self.showError(error.localizedDescription)
+                return
+            }
+            self.navigationItem.title = self.user.username
+        }
     }
     
     private func handleImageSelected(with info: [UIImagePickerController.InfoKey: Any]) {
@@ -225,11 +237,14 @@ extension ChatController: UIImagePickerControllerDelegate, UINavigationControlle
         
         if let selectedImage = selectedImage {
             
+            self.navigationItem.title = "Uploading Image"
+            
             Service.uploadImageMessage(selectedImage, to: user) { (error) in
                 if let error = error {
                     self.showError(error.localizedDescription)
                     return
                 }
+                self.navigationItem.title = self.user.username
             }
         }
     }
@@ -287,10 +302,13 @@ extension ChatController: MessageCellProtocol {
         }
     }
     
-    func handlePlay(for videoUrl: String) {
-        guard let url = URL(string: videoUrl) else { return }
-        
+    func handlePlay(for videoUrl: URL) {
+        let player = AVPlayer(url: videoUrl)
+        let vc = AVPlayerViewController()
+        vc.player = player
+
+        present(vc, animated: true) {
+            vc.player?.play()
+        }
     }
-    
-    
 }

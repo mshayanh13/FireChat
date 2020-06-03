@@ -7,11 +7,10 @@
 //
 
 import UIKit
-import AVFoundation
 
 protocol MessageCellProtocol: class {
     func handleZoomIn(for startingImageView: UIImageView)
-    //func handlePlay()
+    func handlePlay(for videoUrl: URL)
 }
 
 class MessageCell: UICollectionViewCell {
@@ -68,19 +67,19 @@ class MessageCell: UICollectionViewCell {
         return button
     }()
     
-    let activityIndicatorView: UIActivityIndicatorView = {
-        let aiv = UIActivityIndicatorView(style: .large)
-        aiv.translatesAutoresizingMaskIntoConstraints = false
-        aiv.hidesWhenStopped = true
-        return aiv
-    }()
+//    let activityIndicatorView: UIActivityIndicatorView = {
+//        let aiv = UIActivityIndicatorView(style: .large)
+//        aiv.translatesAutoresizingMaskIntoConstraints = false
+//        aiv.hidesWhenStopped = true
+//        return aiv
+//    }()
     
     var bubbleWidthAnchor: NSLayoutConstraint!
     var bubbleLeftAnchor: NSLayoutConstraint!
     var bubbleRightAnchor: NSLayoutConstraint!
     
-    var player: AVPlayer?
-    var playerLayer: AVPlayerLayer?
+//    var player: AVPlayer?
+//    var playerLayer: AVPlayerLayer?
     
     //MARK: Lifecycle
     
@@ -110,27 +109,27 @@ class MessageCell: UICollectionViewCell {
         addSubview(messageImageView)
         messageImageView.anchor(top: bubbleContainer.topAnchor, left: bubbleContainer.leftAnchor, bottom: bubbleContainer.bottomAnchor, right: bubbleContainer.rightAnchor, paddingTop: 0, paddingLeft: 12, paddingBottom: 4, paddingRight: 0)
         
-        bubbleContainer.addSubview(playButton)
+        addSubview(playButton)
         playButton.centerX(inView: bubbleContainer)
         playButton.centerY(inView: bubbleContainer)
         playButton.setDimensions(height: 50, width: 50)
         
-        bubbleContainer.addSubview(activityIndicatorView)
-        activityIndicatorView.centerX(inView: bubbleContainer)
-        activityIndicatorView.centerY(inView: bubbleContainer)
-        activityIndicatorView.setDimensions(height: 50, width: 50)
+//        addSubview(activityIndicatorView)
+//        activityIndicatorView.centerX(inView: bubbleContainer)
+//        activityIndicatorView.centerY(inView: bubbleContainer)
+//        activityIndicatorView.setDimensions(height: 50, width: 50)
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override func prepareForReuse() {
-        super.prepareForReuse()
-        playerLayer?.removeFromSuperlayer()
-        player?.pause()
-        activityIndicatorView.stopAnimating()
-    }
+//    override func prepareForReuse() {
+//        super.prepareForReuse()
+//        playerLayer?.removeFromSuperlayer()
+//        player?.pause()
+//        activityIndicatorView.stopAnimating()
+//    }
     
     //MARK: Selectors
     
@@ -140,19 +139,21 @@ class MessageCell: UICollectionViewCell {
     }
     
     @objc func handlePlay() {
-        //delegate?.handlePlay()
-        
         guard let videoUrlString = message?.videoUrl, let url = URL(string: videoUrlString) else { return }
+        delegate?.handlePlay(for: url)
         
-        player = AVPlayer(url: url)
-        
-        playerLayer = AVPlayerLayer(player: player)
-        playerLayer?.frame = bubbleContainer.bounds
-        bubbleContainer.layer.addSublayer(playerLayer!)
-        
-        player?.play()
-        activityIndicatorView.startAnimating()
-        playButton.isHidden = true
+//        guard let videoUrlString = message?.videoUrl, let url = URL(string: videoUrlString) else { return }
+//
+//        player = AVPlayer(url: url)
+//
+//        playerLayer = AVPlayerLayer(player: player)
+//        playerLayer?.frame = messageImageView.frame
+//        print(messageImageView.debugDescription)
+//        bubbleContainer.layer.addSublayer(playerLayer!)
+//
+//        player?.play()
+//        activityIndicatorView.startAnimating()
+//        playButton.isHidden = true
     }
     
     //MARK: Helpers

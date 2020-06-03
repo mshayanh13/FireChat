@@ -108,7 +108,7 @@ class ProfileHeader: UIView {
         stack.anchor(top: profileImageView.bottomAnchor, paddingTop: 25)
         
         addSubview(dismissButton)
-        dismissButton.anchor(top: topAnchor, left: leftAnchor, paddingTop: 20, paddingLeft: 12)
+        dismissButton.anchor(top: safeAreaLayoutGuide.topAnchor, left: leftAnchor, paddingTop: 20, paddingLeft: 12)
         dismissButton.setDimensions(height: 40, width: 40)
     }
     
